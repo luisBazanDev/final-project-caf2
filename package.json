@@ -4,7 +4,7 @@
   "description": "Proyecto para testear la conexion lora, mediante registros de paquetes",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "server": "nodemon server/src/index.js"
   },
   "keywords": [
     "LoRa",
@@ -16,5 +16,8 @@
   "workspaces": [
     "server",
     "frontend"
-  ]
+  ],
+  "devDependencies": {
+    "nodemon": "^2.0.22"
+  }
 }
