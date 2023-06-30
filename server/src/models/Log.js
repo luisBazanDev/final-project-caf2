@@ -21,6 +21,6 @@ export function register(sequelize) {
     }
   );
   (async () => {
-    await sequelize.sync({ force: true });
+    await sequelize.sync({ force: false });
   })();
 }
