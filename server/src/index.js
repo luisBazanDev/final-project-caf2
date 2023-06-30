@@ -1,13 +1,19 @@
+import express from "express";
 import { config } from "dotenv";
 config();
-import express from "express";
-import { Sequelize } from "sequelize";
+import ApiRouter from "./routers/ApiRouter.js";
+import { start as startDB } from "./DatabaseManager.js";
 
-// Configs
-const orm = new Sequelize(process.env.MYSQL_USER);
-const app = express();
-const PORT = process.env.BACKEND_PORT;
+(async () => {
+  // Configs
+  await startDB();
 
-app.listen(PORT, () => {
-  console.log(`Server on port: ${PORT}`);
-});
+  const app = express();
+  app.use(express.json());
+  const PORT = process.env.BACKEND_PORT;
+  app.use("/api", ApiRouter);
+
+  app.listen(PORT, () => {
+    console.log(`Server on port: ${PORT}`);
+  });
+})();
