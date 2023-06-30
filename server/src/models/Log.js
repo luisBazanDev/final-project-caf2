@@ -6,12 +6,11 @@ export default Log;
 export function register(sequelize) {
   Log.init(
     {
-      timestamp: {
-        type: DataTypes.DATE,
-        allowNull: false,
-        defaultValue: Date.now,
-      },
       msg: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
+      author: {
         type: DataTypes.STRING,
         allowNull: false,
       },
