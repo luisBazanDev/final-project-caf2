@@ -1,8 +1,10 @@
 import express from "express";
+import https from "https";
 import { config } from "dotenv";
 config();
 import ApiRouter from "./routers/ApiRouter.js";
 import { start as startDB } from "./DatabaseManager.js";
+import { fsync } from "fs";
 
 (async () => {
   // Configs
@@ -13,7 +15,15 @@ import { start as startDB } from "./DatabaseManager.js";
   const PORT = process.env.BACKEND_PORT;
   app.use("/api", ApiRouter);
 
-  app.listen(PORT, () => {
-    console.log(`Server on port: ${PORT}`);
-  });
+  https
+    .createServer(
+      {
+        key: fsync("server/https-keys/key.pem"),
+        cert: fsync("server/https-keys/cert.pem"),
+      },
+      app
+    )
+    .listen(PORT, () => {
+      console.log(`Server on port: ${PORT}`);
+    });
 })();
