@@ -18,8 +18,8 @@ import { readFileSync } from "fs";
   https
     .createServer(
       {
-        key: readFileSync("server/https-keys/key.pem"),
-        cert: readFileSync("server/https-keys/cert.pem"),
+        key: readFileSync("./server/https-keys/key.pem"),
+        cert: readFileSync("./server/https-keys/cert.pem"),
       },
       app
     )
