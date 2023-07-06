@@ -20,6 +20,7 @@ import { readFileSync } from "fs";
       {
         key: readFileSync("./server/https-keys/ca-key.pem"),
         cert: readFileSync("./server/https-keys/ca-cert.pem"),
+        passphrase: "test",
       },
       app
     )
