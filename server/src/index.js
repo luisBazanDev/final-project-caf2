@@ -4,7 +4,7 @@ import { config } from "dotenv";
 config();
 import ApiRouter from "./routers/ApiRouter.js";
 import { start as startDB } from "./DatabaseManager.js";
-import { fsync } from "fs";
+import { readFileSync } from "fs";
 
 (async () => {
   // Configs
@@ -18,8 +18,8 @@ import { fsync } from "fs";
   https
     .createServer(
       {
-        key: fsync("server/https-keys/key.pem"),
-        cert: fsync("server/https-keys/cert.pem"),
+        key: readFileSync("server/https-keys/key.pem"),
+        cert: readFileSync("server/https-keys/cert.pem"),
       },
       app
     )
