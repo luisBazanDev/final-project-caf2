@@ -6,12 +6,52 @@ export default Log;
 export function register(sequelize) {
   Log.init(
     {
-      msg: {
+      author: {
         type: DataTypes.STRING,
         allowNull: false,
       },
-      author: {
+      latitude: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+      },
+      longitude: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+      },
+      rssi: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+      },
+      snr: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+      },
+      payload: {
         type: DataTypes.STRING,
+        allowNull: false,
+      },
+      frecuency: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+      },
+      spreading_factor: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+      },
+      bandwidth: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+      },
+      code_rate: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+      },
+      preamble_length: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+      },
+      tx_power: {
+        type: DataTypes.INTEGER,
         allowNull: false,
       },
     },
@@ -21,6 +61,6 @@ export function register(sequelize) {
     }
   );
   (async () => {
-    await sequelize.sync({ force: false });
+    await sequelize.sync({ force: true });
   })();
 }

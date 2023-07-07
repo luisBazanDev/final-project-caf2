@@ -8,12 +8,24 @@ router.get("/all", async (req, res) => {
 });
 
 router.post("/create", async (req, res) => {
-  const msg = req.body.msg;
-  const author = req.body.author;
+  const data = req.body.data;
 
-  if (!msg || !author) return res.send("BAD REQUEST");
+  if (!data) return res.send("BAD REQUEST");
 
-  await Log.create({ msg });
+  await Log.create({
+    author: data.author,
+    latitude: data.latitude,
+    longitude: data.longitude,
+    rssi: data.rssi,
+    snr: data.snr,
+    payload: data.payload,
+    frecuency: data.frecuency,
+    spreading_factor: data.spreading_factor,
+    bandwidth: data.bandwidth,
+    code_rate: data.code_rate,
+    preamble_length: data.preamble_length,
+    tx_power: data.tx_power,
+  });
 
   res.send("OK");
 });
