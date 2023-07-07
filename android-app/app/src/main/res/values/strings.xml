@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">LoRaTester</string>
+    <string name="serial_btn">Serial OFF</string>
+    <string name="mode_btn">Mode: NONE</string>
+    <string name="manual_send">Manual send</string>
+    <string name="logs">...</string>
+    <string name="clearLogs">Clear logs</string>
 </resources>

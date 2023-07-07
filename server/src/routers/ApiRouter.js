@@ -12,6 +12,8 @@ router.post("/create", async (req, res) => {
 
   if (!data) return res.send("BAD REQUEST");
 
+  console.log(`new req from ${req.ip}: ${data}`);
+
   await Log.create({
     author: data.author,
     latitude: data.latitude,

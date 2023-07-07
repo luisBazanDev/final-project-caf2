@@ -15,8 +15,8 @@ import com.felhr.usbserial.UsbSerialInterface
 
 class SerialCommunicationProvider {
     private val ACTION_USB_PERMISSION = "pe.bazan.pe.android.serialtest2.USB_PERMISSION"
-    private val VENDOR_ID = 6790
-    private val BAUD_RATE = 9600
+    private val VENDOR_ID = 1027
+    private val BAUD_RATE = 115200
 
     var callbacks: HashMap<String, (value: String) -> Unit> = HashMap()
 
@@ -65,7 +65,7 @@ class SerialCommunicationProvider {
         }
     }
 
-    fun startUsbConnecting() {
+    fun startUsbConnecting(): Boolean {
         val usbDevices: HashMap<String, UsbDevice>? = m_usbManager.deviceList
         if (!usbDevices?.isEmpty()!!) {
             var keep = true
@@ -80,6 +80,7 @@ class SerialCommunicationProvider {
                     keep = false
                     Log.i("serial", "connection successful")
                     Toast.makeText(mainActivity, "connection successful", Toast.LENGTH_SHORT).show()
+                    return true
                 } else {
                     m_connection = null
                     m_device = null
@@ -87,13 +88,14 @@ class SerialCommunicationProvider {
                     Toast.makeText(mainActivity, "unable to connect", Toast.LENGTH_SHORT).show()
                 }
                 if (!keep) {
-                    return
+                    return false
                 }
             }
         } else {
             Log.i("serial", "no usb device connected")
             Toast.makeText(mainActivity, "no usb device connected", Toast.LENGTH_SHORT).show()
         }
+        return false
     }
 
     fun registerReadData(event: String, callback: (data: String) -> Unit) {
