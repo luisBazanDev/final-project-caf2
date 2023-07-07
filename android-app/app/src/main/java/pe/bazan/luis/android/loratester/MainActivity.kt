@@ -32,7 +32,7 @@ class MainActivity : ComponentActivity() {
     private lateinit var gpsProvider: GpsProvider
     private lateinit var gpsActual: Location
 
-    private var serialStatus: Boolean = false
+    var serialStatus: Boolean = false
 
     private lateinit var logsComponent: TextView
     private lateinit var gpsComponent: TextView
@@ -56,6 +56,7 @@ class MainActivity : ComponentActivity() {
             override fun run() {
                 gpsProvider.getCurrentLocation {
                     gpsActual = it
+                    sendLog("GPS", "Actualizacion de la posicion GPS")
                     runOnUiThread {
                         gpsComponent.text =  "Lat: ${it.latitude} | Long: ${it.longitude}"
                     }

@@ -20,11 +20,11 @@ export function register(sequelize) {
       },
       rssi: {
         type: DataTypes.INTEGER,
-        allowNull: false,
+        allowNull: true,
       },
       snr: {
         type: DataTypes.INTEGER,
-        allowNull: false,
+        allowNull: true,
       },
       payload: {
         type: DataTypes.STRING,
@@ -61,6 +61,6 @@ export function register(sequelize) {
     }
   );
   (async () => {
-    await sequelize.sync({ force: false });
+    await sequelize.sync({ force: true });
   })();
 }
