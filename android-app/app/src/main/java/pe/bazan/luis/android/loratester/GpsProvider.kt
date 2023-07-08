@@ -45,7 +45,6 @@ class GpsProvider {
                     if (location == null) {
                         Toast.makeText(mainActivity.applicationContext, "LOCATION IS NULL", Toast.LENGTH_SHORT).show()
                     } else {
-                        Toast.makeText(mainActivity.applicationContext, "GPS SUCCESS", Toast.LENGTH_SHORT).show()
                         callback.invoke(location)
                     }
                 }

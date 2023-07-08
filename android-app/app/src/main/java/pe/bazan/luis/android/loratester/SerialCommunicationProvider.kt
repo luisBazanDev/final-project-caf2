@@ -48,18 +48,41 @@ class SerialCommunicationProvider {
     }
 
     fun sendData(data: String) {
-        m_serial?.write(data.toByteArray())
-        Log.i("serial", "sendding data: " + data.toByteArray())
+        m_serial?.write((data).toByteArray())
+        if (m_serial != null) {
+            mainActivity.sendLog("Serial", "Sending data: $data")
+            Log.i("serial", "Sending data: " + data.toByteArray())
+        } else {
+            mainActivity.sendLog("Serial", "Error on send data: $data")
+            Log.i("serial", "Error on send data: " + data.toByteArray())
+        }
     }
 
-    var mCallBack = UsbSerialInterface.UsbReadCallback() {raw ->
-        val data = String(raw, Charsets.UTF_8)
+    var mCallBackLine = object : UsbSerialInterface.UsbReadCallback {
+        var line: String = ""
 
-        for (callback in callbacks) {
-            if (data.startsWith(callback.key + ":")) {
-                val value: String = data.slice(callback.key.length..data.length - 1)
-                mainActivity?.runOnUiThread {
-                    callback.value.invoke(value)
+        override fun onReceivedData(data: ByteArray) {
+            var rawString = String(data, Charsets.UTF_8)
+            var splitData = rawString.split("\n")
+            for (splitDatum in splitData) {
+                line += splitDatum
+                if (splitDatum.isNotEmpty() && splitDatum.last() == '\r') {
+                    completeLine()
+                    line = ""
+                }
+            }
+        }
+
+        fun completeLine() {
+            var data = line
+            mainActivity.sendLog("Serial", "Received raw data: $data")
+
+            for (callback in callbacks) {
+                if (data.startsWith(callback.key + ":")) {
+                    val value: String = data.slice(callback.key.length+1..data.length - 1)
+                    mainActivity?.runOnUiThread {
+                        callback.value.invoke(value)
+                    }
                 }
             }
         }
@@ -117,7 +140,8 @@ class SerialCommunicationProvider {
                             m_serial!!.setStopBits(UsbSerialInterface.STOP_BITS_1)
                             m_serial!!.setParity(UsbSerialInterface.PARITY_NONE)
                             m_serial!!.setFlowControl(UsbSerialInterface.FLOW_CONTROL_OFF)
-                            m_serial!!.read(mCallBack)
+                            m_serial!!.read(mCallBackLine)
+                            Toast.makeText(mainActivity, "adsdwads", Toast.LENGTH_SHORT).show()
                         } else {
                             Log.i("serial", "port not open")
                         }

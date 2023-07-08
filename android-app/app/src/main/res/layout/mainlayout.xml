@@ -37,6 +37,16 @@
         />
 
     <Button
+        android:id="@+id/presets"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="30dp"
+        android:textAlignment="center"
+        android:text="PRESET: 1"
+        android:onClick="changePreset"
+        />
+
+    <Button
         android:id="@+id/manualSend"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -45,6 +55,7 @@
         android:text="@string/manual_send"
         android:onClick="manualSend"
         />
+
     <TextView
         android:id="@+id/gps_monitor"
         android:layout_width="match_parent"
@@ -52,6 +63,107 @@
         android:layout_marginHorizontal="30dp"
         android:textAlignment="center"
         android:text="Lat: -- | Long: ---"
+        />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="30dp"
+        android:orientation="horizontal">
+
+        <EditText
+            android:id="@+id/values_sf"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:inputType="number"
+            android:text="12"/>
+
+        <EditText
+            android:id="@+id/values_BW"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:inputType="number"
+            android:text="125"
+            android:textSelectHandleRight="@drawable/bandwidth"/>
+
+        <EditText
+            android:id="@+id/values_cr"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:inputType="number"
+            android:text="2"/>
+
+        <EditText
+            android:id="@+id/values_pl"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:inputType="number"
+            android:text="8"/>
+
+        <EditText
+            android:id="@+id/values_txp"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:inputType="number"
+            android:text="22"/>
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="30dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textAlignment="center"
+            android:text="Spreading Factor\n5~12\nSF7"/>
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textAlignment="center"
+            android:text="Bandwidth\n(kHz)"/>
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textAlignment="center"
+            android:text="Code Rate"/>
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textAlignment="center"
+            android:text="Preamble Length"/>
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textAlignment="center"
+            android:text="TX Power\n5~22\n14dbm"/>
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/load_values"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="30dp"
+        android:textAlignment="center"
+        android:text="Load values"
+        android:onClick="loadValues"
         />
 
     <Button

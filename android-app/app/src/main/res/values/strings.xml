@@ -5,4 +5,11 @@
     <string name="manual_send">Manual send</string>
     <string name="logs">...</string>
     <string name="clearLogs">Clear logs</string>
+    <string-array name="modes">
+        <item>NONE</item>
+        <item>SENDER</item>
+        <item>RECEIVER</item>
+        <item>RECEIVER-PING</item>
+        <item>SENDER-PING</item>
+    </string-array>
 </resources>
