@@ -106,7 +106,7 @@ class LoRaManager {
                 sendCommand("AT+PSEND="+payload)
             }
 
-            logsTraking.logItem(this, payload, rssi, snr)
+            logsTraking.logItem(mainActivity.gpsActual, this, payload, rssi, snr)
 
             Toast.makeText(mainActivity, "RSSI:\n$rssi\nSNR:\n$snr\nPayload:$payload", Toast.LENGTH_LONG).show()
         }

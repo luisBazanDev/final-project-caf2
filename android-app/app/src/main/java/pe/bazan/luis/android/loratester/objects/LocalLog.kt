@@ -12,9 +12,9 @@ import org.json.JSONObject
 import java.util.UUID
 
 class LocalLog(
-    val latitude: Int,
-    val longitude: Int,
-    val altitude: Int,
+    val latitude: Double,
+    val longitude: Double,
+    val altitude: Double,
     private val rssi: Int?,
     private val snr: Int?,
     val payload: String,
