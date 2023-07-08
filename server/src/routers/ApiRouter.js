@@ -10,11 +10,11 @@ router.get("/all", async (req, res) => {
 router.post("/create", async (req, res) => {
   const data = req.body.data;
 
+  console.log(`new req from ${req.ip}: ${data}`);
+
   if (!data) return res.send("BAD REQUEST");
 
   const localUuid = data.uuid;
-
-  console.log(`new req from ${req.ip}: ${data}`);
 
   await Log.create({
     author: data.author,
