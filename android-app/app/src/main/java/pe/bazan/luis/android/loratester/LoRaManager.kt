@@ -2,14 +2,13 @@ package pe.bazan.luis.android.loratester
 
 import android.os.Handler
 import android.os.Looper
-import android.util.Log
 import android.widget.Toast
 import java.util.LinkedList
 import java.util.Queue
 
 class LoRaManager {
     private lateinit var mainActivity: MainActivity
-    var mode: Int
+    var mode: Int = 0
     var spreadingFactor: Int? = null
     var bandWidth: Int? = null
     var codeRate: Int? = null
@@ -19,7 +18,9 @@ class LoRaManager {
     constructor(mainActivity: MainActivity, mode: Int) {
         this.mainActivity = mainActivity
         this.mode = mode
-        sendCommand("AT")
+        sendCommand("AT", true)
+        sendCommand("AT+PRECV=0", true)
+        sendCommand("AT+NWM=0", true)
     }
 
     fun loadMode() {
@@ -54,10 +55,13 @@ class LoRaManager {
     val receiverP2PPackage = {data: String ->
         mainActivity.sendLog("receiverP2PPackage", data)
         var values = data.split(":")
-        if (values.size > 3) {
+        if (values.size >= 3) {
             val rssi = values[0].toInt()
             val snr = values[1].toInt()
             val payload = values[2]
+            if (mode == 3) {
+                sendCommand("AT+PSEND="+payload)
+            }
 
             Toast.makeText(mainActivity, "RSSI:\n$rssi\nSNR:\n$snr\nPayload:$payload", Toast.LENGTH_LONG).show()
         }
@@ -78,9 +82,9 @@ class LoRaManager {
     private val sendCommandQueue: Queue<String> = LinkedList()
     private var isSendingCommand = false
 
-    fun sendCommand(sendCommand: String) {
+    fun sendCommand(sendCommand: String, bypass: Boolean = false) {
         if (mode == 0 && !sendCommand.startsWith("AT+P2P=")) {
-            return
+            if (bypass == null) return
         }
 
         sendCommandQueue.offer(sendCommand)
@@ -96,7 +100,7 @@ class LoRaManager {
             Handler(Looper.getMainLooper()).postDelayed({
                 isSendingCommand = false
                 processCommandQueue()
-            }, 200L)
+            }, 500L)
         }
     }
 

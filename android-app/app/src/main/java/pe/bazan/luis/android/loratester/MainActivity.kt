@@ -48,6 +48,7 @@ class MainActivity : ComponentActivity() {
     private val presets: Array<Array<Int>> = arrayOf(
         arrayOf(7,125,0,8,5),
         arrayOf(10,125,2,8,22),
+        arrayOf(10,125,3,8,22),
     )
 
     private lateinit var gpsUpdater: Timer
@@ -67,7 +68,7 @@ class MainActivity : ComponentActivity() {
             override fun run() {
                 gpsProvider.getCurrentLocation {
                     gpsActual = it
-                    sendLog("GPS", "Actualizacion de la posicion GPS")
+                    Toast.makeText(this@MainActivity, "GPS UPDATED", Toast.LENGTH_SHORT).show()
                     runOnUiThread {
                         gpsComponent.text =  "Lat: ${it.latitude} | Long: ${it.longitude}"
                     }

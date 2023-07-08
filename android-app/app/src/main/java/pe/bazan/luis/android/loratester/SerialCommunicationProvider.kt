@@ -63,6 +63,7 @@ class SerialCommunicationProvider {
 
         override fun onReceivedData(data: ByteArray) {
             var rawString = String(data, Charsets.UTF_8)
+            mainActivity.sendLog("Serial", "Received raw data: $rawString")
             var splitData = rawString.split("\n")
             for (splitDatum in splitData) {
                 line += splitDatum
@@ -75,7 +76,7 @@ class SerialCommunicationProvider {
 
         fun completeLine() {
             var data = line
-            mainActivity.sendLog("Serial", "Received raw data: $data")
+            mainActivity.sendLog("Serial", "Received raw line: $data")
 
             for (callback in callbacks) {
                 if (data.startsWith(callback.key + ":")) {
