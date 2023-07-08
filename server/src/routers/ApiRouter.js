@@ -32,7 +32,9 @@ router.post("/create", async (req, res) => {
     tx_power: data.tx_power,
   });
 
-  res.send(localUuid);
+  res.json({
+    uuid: localUuid,
+  });
 });
 
 router.post("/ping", async (req, res) => {
