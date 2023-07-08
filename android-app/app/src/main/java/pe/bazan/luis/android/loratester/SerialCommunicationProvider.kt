@@ -14,7 +14,7 @@ import com.felhr.usbserial.UsbSerialDevice
 import com.felhr.usbserial.UsbSerialInterface
 
 class SerialCommunicationProvider {
-    private val ACTION_USB_PERMISSION = "pe.bazan.pe.android.serialtest2.USB_PERMISSION"
+    private val ACTION_USB_PERMISSION = "pe.bazan.pe.android.loratester.USB_PERMISSION"
     private val VENDOR_ID = 1027
     private val BAUD_RATE = 115200
 
@@ -48,7 +48,7 @@ class SerialCommunicationProvider {
     }
 
     fun sendData(data: String) {
-        m_serial?.write((data).toByteArray())
+        m_serial?.write(data.toByteArray())
         if (m_serial != null) {
             mainActivity.sendLog("Serial", "Sending data: $data")
             Log.i("serial", "Sending data: " + data.toByteArray())
@@ -63,7 +63,6 @@ class SerialCommunicationProvider {
 
         override fun onReceivedData(data: ByteArray) {
             var rawString = String(data, Charsets.UTF_8)
-            mainActivity.sendLog("Serial", "Received raw data: $rawString")
             var splitData = rawString.split("\n")
             for (splitDatum in splitData) {
                 line += splitDatum
@@ -79,7 +78,11 @@ class SerialCommunicationProvider {
             mainActivity.sendLog("Serial", "Received raw line: $data")
 
             for (callback in callbacks) {
-                if (data.startsWith(callback.key + ":")) {
+                if (callback.key.startsWith("raw")) {
+                    mainActivity?.runOnUiThread {
+                        callback.value.invoke(data)
+                    }
+                } else if (data.startsWith(callback.key + ":")) {
                     val value: String = data.slice(callback.key.length+1..data.length - 1)
                     mainActivity?.runOnUiThread {
                         callback.value.invoke(value)

@@ -5,6 +5,9 @@ import android.os.Looper
 import android.widget.Toast
 import java.util.LinkedList
 import java.util.Queue
+import java.util.Timer
+import java.util.TimerTask
+import kotlin.math.log
 
 class LoRaManager {
     private lateinit var mainActivity: MainActivity
@@ -14,6 +17,8 @@ class LoRaManager {
     var codeRate: Int? = null
     var preambleLength: Int? = null
     var txPower: Int? = null
+    var logsTraking = LogsTraking()
+    private var logsSync: Timer
 
     constructor(mainActivity: MainActivity, mode: Int) {
         this.mainActivity = mainActivity
@@ -21,6 +26,18 @@ class LoRaManager {
         sendCommand("AT", true)
         sendCommand("AT+PRECV=0", true)
         sendCommand("AT+NWM=0", true)
+
+        logsSync = Timer()
+        val logsTask = object : TimerTask() {
+            override fun run() {
+                logsTraking.sendNextLog() {
+                    mainActivity.sendLog("Cloud", "Lora logs saved...")
+                }
+                mainActivity.sendLog("Cloud", "Saving Lora logs...")
+            }
+        }
+
+        logsSync.scheduleAtFixedRate(logsTask, 0, 20000L)
     }
 
     fun loadMode() {
@@ -38,9 +55,10 @@ class LoRaManager {
             2 -> {
                 // RECEIVER - TX MODE NOT ALLOWED
                 sendCommand("AT+PRECV=0")
-                sendCommand("AT+PRECV=65534")
+                sendCommand("AT+PRECV=65532")
                 mainActivity.serialCommunicationProvider.callbacks = HashMap()
                 mainActivity.serialCommunicationProvider.registerReadData("+EVT:RXP2P", receiverP2PPackage)
+                mainActivity.serialCommunicationProvider.registerReadData("raw-receiver", receiverLogicEnable)
             }
             3 -> {
                 // RECEIVER-PING - TX MODE ALLOWED
@@ -48,6 +66,29 @@ class LoRaManager {
                 sendCommand("AT+PRECV=65533")
                 mainActivity.serialCommunicationProvider.callbacks = HashMap()
                 mainActivity.serialCommunicationProvider.registerReadData("+EVT:RXP2P", receiverP2PPackage)
+                mainActivity.serialCommunicationProvider.registerReadData("raw-receiver", receiverLogicEnable)
+            }
+            4 -> {
+
+            }
+        }
+    }
+
+    val receiverLogicEnable = {data: String ->
+        if (mode == 2) {
+            if (
+                data.equals("+EVT:RXP2P RECEIVE TIMEOUT")
+                || data.startsWith("+EVT:RXP2P:")
+            ) {
+                sendCommand("AT+PRECV=65532")
+            }
+        }
+        if (mode == 3) {
+            if (
+                data.equals("+EVT:RXP2P RECEIVE TIMEOUT")
+                || data.startsWith("+EVT:RXP2P:")
+            ) {
+                sendCommand("AT+PRECV=65533")
             }
         }
     }
@@ -56,12 +97,16 @@ class LoRaManager {
         mainActivity.sendLog("receiverP2PPackage", data)
         var values = data.split(":")
         if (values.size >= 3) {
-            val rssi = values[0].toInt()
-            val snr = values[1].toInt()
-            val payload = values[2]
+            val rssi = values.first().toInt()
+            values.drop(1)
+            val snr = values.first().toInt()
+            values.drop(1)
+            val payload = values.joinToString(":")
             if (mode == 3) {
                 sendCommand("AT+PSEND="+payload)
             }
+
+            logsTraking.logItem(this, payload, rssi, snr)
 
             Toast.makeText(mainActivity, "RSSI:\n$rssi\nSNR:\n$snr\nPayload:$payload", Toast.LENGTH_LONG).show()
         }
@@ -72,7 +117,7 @@ class LoRaManager {
     }
 
     fun stop() {
-
+        logsSync.cancel()
     }
 
     fun manualSend() {
@@ -106,5 +151,9 @@ class LoRaManager {
 
     fun config() {
         sendCommand("AT+P2P=${Frequency.PERU.value}:$spreadingFactor:$bandWidth:$codeRate:$preambleLength:$txPower")
+    }
+
+    fun getAuthor(): String {
+        return mainActivity.resources.getStringArray(R.array.modes)[mode]
     }
 }

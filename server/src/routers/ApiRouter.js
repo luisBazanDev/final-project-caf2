@@ -12,12 +12,15 @@ router.post("/create", async (req, res) => {
 
   if (!data) return res.send("BAD REQUEST");
 
+  const localUuid = data.uuid;
+
   console.log(`new req from ${req.ip}: ${data}`);
 
   await Log.create({
     author: data.author,
     latitude: data.latitude,
     longitude: data.longitude,
+    altitude: data.altitude,
     rssi: data.rssi,
     snr: data.snr,
     payload: data.payload,
@@ -29,7 +32,7 @@ router.post("/create", async (req, res) => {
     tx_power: data.tx_power,
   });
 
-  res.send("OK");
+  res.send(localUuid);
 });
 
 router.post("/ping", async (req, res) => {

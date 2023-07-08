@@ -18,6 +18,10 @@ export function register(sequelize) {
         type: DataTypes.INTEGER,
         allowNull: false,
       },
+      altitude: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+      },
       rssi: {
         type: DataTypes.INTEGER,
         allowNull: true,
