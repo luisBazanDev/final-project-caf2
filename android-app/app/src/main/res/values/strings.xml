@@ -11,5 +11,6 @@
         <item>RECEIVER</item>
         <item>RECEIVER-PING</item>
         <item>SENDER-PING</item>
+        <item>TEST ALL</item>
     </string-array>
 </resources>

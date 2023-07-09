@@ -46,9 +46,11 @@ class MainActivity : ComponentActivity() {
     private var presetIndex: Int = 0
 
     private val presets: Array<Array<Int>> = arrayOf(
-        arrayOf(7,125,0,8,5),
-        arrayOf(10,125,2,8,22),
+        arrayOf(6,500,3,12,10),
+        arrayOf(8,250,2,10,15),
+        arrayOf(6,500,0,12,22),
         arrayOf(10,125,3,8,22),
+        arrayOf(12,125,0,8,22),
     )
 
     private lateinit var gpsUpdater: Timer
@@ -112,7 +114,7 @@ class MainActivity : ComponentActivity() {
     }
 
     fun modeAlt(view: View) {
-        if (mode >= 4) mode = 0
+        if (mode >= 5) mode = 0
         else mode++
         runOnUiThread {
             findViewById<TextView>(R.id.mode_btn).text = "MODE: " + resources.getStringArray(R.array.modes)[mode]

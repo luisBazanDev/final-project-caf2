@@ -2,8 +2,11 @@ package pe.bazan.luis.android.loratester
 
 import android.os.Handler
 import android.os.Looper
+import com.google.android.gms.common.util.Hex
+import java.util.Date
 import java.util.LinkedList
 import java.util.Queue
+import java.util.UUID
 
 class LoRaManager {
     private lateinit var mainActivity: MainActivity
@@ -52,7 +55,14 @@ class LoRaManager {
                 mainActivity.serialCommunicationProvider.registerReadData("raw-receiver", receiverLogicEnable)
             }
             4 -> {
-
+                // SENDER-PING
+                sendCommand("AT+PRECV=0")
+                mainActivity.serialCommunicationProvider.callbacks = HashMap()
+            }
+            5 -> {
+                // SENDER-PING
+                sendCommand("AT+PRECV=0")
+                mainActivity.serialCommunicationProvider.callbacks = HashMap()
             }
         }
     }
@@ -88,7 +98,6 @@ class LoRaManager {
             if (mode == 3) {
                 sendCommand("AT+PSEND="+payload)
             }
-
             logsTraking.logItem(mainActivity.gpsActual, this, payload, rssi, snr)
         }
     }
@@ -98,11 +107,14 @@ class LoRaManager {
     }
 
     fun stop() {
-//        logsSync.cancel()
     }
 
     fun manualSend() {
-
+        if (mode == 1 || mode == 2) {
+            val uuid = UUID.randomUUID().toString()
+            sendCommand("AT+PSEND="+convertToHex(uuid))
+            logsTraking.logItem(mainActivity.gpsActual, this, uuid)
+        }
     }
 
     private val sendCommandQueue: Queue<String> = LinkedList()
@@ -136,5 +148,17 @@ class LoRaManager {
 
     fun getAuthor(): String {
         return mainActivity.resources.getStringArray(R.array.modes)[mode]
+    }
+
+    fun convertToHex(input: String): String {
+        val bytes = input.toByteArray()
+        val hexStringBuilder = StringBuilder()
+
+        for (byte in bytes) {
+            val hexString = String.format("%02X", byte)
+            hexStringBuilder.append(hexString)
+        }
+
+        return hexStringBuilder.toString()
     }
 }

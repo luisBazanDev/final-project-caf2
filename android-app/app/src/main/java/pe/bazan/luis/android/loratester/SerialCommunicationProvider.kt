@@ -10,6 +10,7 @@ import android.hardware.usb.UsbDeviceConnection
 import android.hardware.usb.UsbManager
 import android.util.Log
 import android.widget.Toast
+import androidx.core.view.ContentInfoCompat.Flags
 import com.felhr.usbserial.UsbSerialDevice
 import com.felhr.usbserial.UsbSerialInterface
 
@@ -102,7 +103,7 @@ class SerialCommunicationProvider {
                 Toast.makeText(mainActivity, "vendorId: " + deviceVendorId, Toast.LENGTH_SHORT).show()
                 Log.i("serial", "vendorId: " + deviceVendorId)
                 if (deviceVendorId == VENDOR_ID) {
-                    val intent: PendingIntent = PendingIntent.getBroadcast(mainActivity, 0, Intent(ACTION_USB_PERMISSION), 0)
+                    val intent: PendingIntent = PendingIntent.getBroadcast(mainActivity, 0, Intent(ACTION_USB_PERMISSION), PendingIntent.FLAG_MUTABLE)
                     m_usbManager.requestPermission(m_device, intent)
                     keep = false
                     Log.i("serial", "connection successful")
