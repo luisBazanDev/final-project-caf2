@@ -2,10 +2,13 @@ package pe.bazan.luis.android.loratester
 
 import android.os.Handler
 import android.os.Looper
+import android.widget.Toast
 import com.google.android.gms.common.util.Hex
 import java.util.Date
 import java.util.LinkedList
 import java.util.Queue
+import java.util.Timer
+import java.util.TimerTask
 import java.util.UUID
 
 class LoRaManager {
@@ -18,6 +21,7 @@ class LoRaManager {
     var txPower: Int? = null
     var logsTraking = LogsTraking()
 
+    var senderTimer: Timer? = null
     constructor(mainActivity: MainActivity, mode: Int) {
         this.mainActivity = mainActivity
         this.mode = mode
@@ -57,10 +61,22 @@ class LoRaManager {
             4 -> {
                 // SENDER-PING
                 sendCommand("AT+PRECV=0")
+                senderTimer = Timer()
+                val senderTask = object : TimerTask() {
+                    override fun run() {
+                        if (mode != 4) {
+                            senderTimer?.cancel()
+                            senderTimer = null
+                        } else {
+                            manualSend()
+                        }
+                    }
+                }
+                senderTimer!!.scheduleAtFixedRate(senderTask, 0, 10000L)
                 mainActivity.serialCommunicationProvider.callbacks = HashMap()
             }
             5 -> {
-                // SENDER-PING
+                // ALL MODES
                 sendCommand("AT+PRECV=0")
                 mainActivity.serialCommunicationProvider.callbacks = HashMap()
             }
@@ -87,16 +103,15 @@ class LoRaManager {
     }
 
     val receiverP2PPackage = {data: String ->
-        mainActivity.sendLog("receiverP2PPackage", data)
         var values = data.split(":")
         if (values.size >= 3) {
             val rssi = values.first().toInt()
-            values.drop(1)
+            values = values.drop(1)
             val snr = values.first().toInt()
-            values.drop(1)
-            val payload = values.joinToString(":")
+            values = values.drop(1)
+            val payload = convertFromHex(values.first())
             if (mode == 3) {
-                sendCommand("AT+PSEND="+payload)
+                sendCommand("AT+PSEND="+values.first())
             }
             logsTraking.logItem(mainActivity.gpsActual, this, payload, rssi, snr)
         }
@@ -110,7 +125,7 @@ class LoRaManager {
     }
 
     fun manualSend() {
-        if (mode == 1 || mode == 2) {
+        if (mode == 1 || mode == 4) {
             val uuid = UUID.randomUUID().toString()
             sendCommand("AT+PSEND="+convertToHex(uuid))
             logsTraking.logItem(mainActivity.gpsActual, this, uuid)
@@ -160,5 +175,23 @@ class LoRaManager {
         }
 
         return hexStringBuilder.toString()
+    }
+
+    fun convertFromHex(hexString: String): String {
+        val stringBuilder = StringBuilder()
+
+        var index = 0
+        while (index < hexString.length - 1) {
+            val hexPair = hexString.substring(index, index + 2)
+            val charValue = try {
+                hexPair.toInt(16).toChar()
+            } catch (e: NumberFormatException) {
+                throw IllegalArgumentException("Invalid hexString: $hexString")
+            }
+            stringBuilder.append(charValue)
+            index += 2
+        }
+
+        return stringBuilder.toString()
     }
 }
