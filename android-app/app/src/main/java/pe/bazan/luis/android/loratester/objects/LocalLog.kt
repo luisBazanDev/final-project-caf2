@@ -9,6 +9,7 @@ import okhttp3.RequestBody.Companion.toRequestBody
 import okhttp3.Response
 import okio.IOException
 import org.json.JSONObject
+import pe.bazan.luis.android.loratester.LoRaManager
 import java.util.UUID
 
 class LocalLog(
@@ -28,7 +29,8 @@ class LocalLog(
     private val uuid: UUID = UUID.randomUUID()
 
     fun send(api: String, callback: () -> Unit) {
-        val json = JSONObject().apply {
+        val data = JSONObject().apply {
+            put("frecuency", LoRaManager.Frequency.PERU.value)
             put("latitude", latitude)
             put("longitude", longitude)
             put("altitude", altitude)
@@ -43,12 +45,15 @@ class LocalLog(
             put("author", author)
             put("uuid", uuid)
         }
+        val json = JSONObject().apply {
+            put("data", data)
+        }
 
         val mediaType = "application/json; charset=utf-8".toMediaTypeOrNull()
         val requestBody = json.toString().toRequestBody(mediaType)
 
         val request = Request.Builder()
-            .url("http://tu-servidor.com/api/endpoint")
+            .url(api)
             .post(requestBody)
             .build()
 

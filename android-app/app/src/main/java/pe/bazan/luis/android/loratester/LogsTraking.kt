@@ -40,9 +40,8 @@ class LogsTraking {
             )
         }
 
-        if (localLog == null) return
-
         logsQueue.offer(localLog)
+        sendNextLog()
     }
 
     fun sendNextLog(callback: () -> Unit = {}) {
@@ -52,9 +51,11 @@ class LogsTraking {
 
             actualLog.send(LOGS_URL) {
                 isSendingLog  = false
-                callback?.invoke()
                 sendNextLog()
+                callback?.invoke()
             }
+        } else {
+            callback?.invoke()
         }
     }
 }

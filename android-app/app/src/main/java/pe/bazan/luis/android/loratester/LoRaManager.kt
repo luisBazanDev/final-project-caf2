@@ -2,12 +2,8 @@ package pe.bazan.luis.android.loratester
 
 import android.os.Handler
 import android.os.Looper
-import android.widget.Toast
 import java.util.LinkedList
 import java.util.Queue
-import java.util.Timer
-import java.util.TimerTask
-import kotlin.math.log
 
 class LoRaManager {
     private lateinit var mainActivity: MainActivity
@@ -18,7 +14,6 @@ class LoRaManager {
     var preambleLength: Int? = null
     var txPower: Int? = null
     var logsTraking = LogsTraking()
-    private var logsSync: Timer
 
     constructor(mainActivity: MainActivity, mode: Int) {
         this.mainActivity = mainActivity
@@ -26,18 +21,6 @@ class LoRaManager {
         sendCommand("AT", true)
         sendCommand("AT+PRECV=0", true)
         sendCommand("AT+NWM=0", true)
-
-        logsSync = Timer()
-        val logsTask = object : TimerTask() {
-            override fun run() {
-                logsTraking.sendNextLog() {
-                    mainActivity.sendLog("Cloud", "Lora logs saved...")
-                }
-                mainActivity.sendLog("Cloud", "Saving Lora logs...")
-            }
-        }
-
-        logsSync.scheduleAtFixedRate(logsTask, 0, 20000L)
     }
 
     fun loadMode() {
@@ -107,8 +90,6 @@ class LoRaManager {
             }
 
             logsTraking.logItem(mainActivity.gpsActual, this, payload, rssi, snr)
-
-            Toast.makeText(mainActivity, "RSSI:\n$rssi\nSNR:\n$snr\nPayload:$payload", Toast.LENGTH_LONG).show()
         }
     }
 
@@ -117,7 +98,7 @@ class LoRaManager {
     }
 
     fun stop() {
-        logsSync.cancel()
+//        logsSync.cancel()
     }
 
     fun manualSend() {
