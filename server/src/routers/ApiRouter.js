@@ -10,7 +10,8 @@ router.get("/all", async (req, res) => {
 router.post("/create", async (req, res) => {
   const data = req.body.data;
 
-  console.log(`new req from ${req.ip}: ${data}`);
+  console.log(`new req from ${req.ip}:`);
+  console.table(data);
 
   if (!data) return res.send("BAD REQUEST");
 
