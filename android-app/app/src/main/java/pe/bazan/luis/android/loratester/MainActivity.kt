@@ -33,7 +33,7 @@ import kotlin.math.log
 class MainActivity : ComponentActivity() {
     lateinit var serialCommunicationProvider: SerialCommunicationProvider
     private lateinit var gpsProvider: GpsProvider
-    lateinit var gpsActual: Location
+    var gpsActual: Location? = null
     private var loRaManager: LoRaManager? = null
 
     var serialStatus: Boolean = false

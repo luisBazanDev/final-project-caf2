@@ -8,19 +8,19 @@ export function register(sequelize) {
     {
       author: {
         type: DataTypes.STRING,
-        allowNull: false,
+        allowNull: true,
       },
       latitude: {
         type: DataTypes.DOUBLE,
-        allowNull: false,
+        allowNull: true,
       },
       longitude: {
         type: DataTypes.DOUBLE,
-        allowNull: false,
+        allowNull: true,
       },
       altitude: {
         type: DataTypes.DOUBLE,
-        allowNull: false,
+        allowNull: true,
       },
       rssi: {
         type: DataTypes.INTEGER,
@@ -32,31 +32,31 @@ export function register(sequelize) {
       },
       payload: {
         type: DataTypes.STRING,
-        allowNull: false,
+        allowNull: true,
       },
       frecuency: {
         type: DataTypes.INTEGER,
-        allowNull: false,
+        allowNull: true,
       },
       spreading_factor: {
         type: DataTypes.INTEGER,
-        allowNull: false,
+        allowNull: true,
       },
       bandwidth: {
         type: DataTypes.INTEGER,
-        allowNull: false,
+        allowNull: true,
       },
       code_rate: {
         type: DataTypes.INTEGER,
-        allowNull: false,
+        allowNull: true,
       },
       preamble_length: {
         type: DataTypes.INTEGER,
-        allowNull: false,
+        allowNull: true,
       },
       tx_power: {
         type: DataTypes.INTEGER,
-        allowNull: false,
+        allowNull: true,
       },
     },
     {
@@ -65,6 +65,6 @@ export function register(sequelize) {
     }
   );
   (async () => {
-    await sequelize.sync({ force: false });
+    await sequelize.sync({ force: true });
   })();
 }

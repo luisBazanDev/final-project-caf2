@@ -10,7 +10,7 @@ class LogsTraking {
     private val logsQueue: Queue<LocalLog> = LinkedList()
     private var isSendingLog = false
 
-    fun logItem(location: Location, loRaManager: LoRaManager, payload: String, rssi: Int? = null, snr: Int? = null) {
+    fun logItem(location: Location?, loRaManager: LoRaManager, payload: String, rssi: Int? = null, snr: Int? = null) {
         var localLog: LocalLog? = null
         val spreadingFactor = loRaManager.spreadingFactor
         val bandWidth = loRaManager.bandWidth
@@ -23,6 +23,7 @@ class LogsTraking {
             bandWidth != null &&
             codeRate != null &&
             preambleLength != null &&
+            location != null &&
             txPower != null) {
             localLog = LocalLog(
                 location.latitude,
@@ -38,9 +39,10 @@ class LogsTraking {
                 txPower,
                 author
             )
+
+            logsQueue.offer(localLog)
         }
 
-        logsQueue.offer(localLog)
         sendNextLog()
     }
 
