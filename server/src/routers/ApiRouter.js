@@ -16,7 +16,8 @@ router.get("/temp", async (req, res) => {
 });
 
 router.post("/temp", async (req, res) => {
-  if (req.body.temperaature) temperatureHumidity = req.body;
+  console.log(req.body.data);
+  if (req.body.data) temperatureHumidity = req.body.data;
 });
 
 router.post("/create", async (req, res) => {
