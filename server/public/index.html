@@ -40,10 +40,10 @@
       fetch("/api/temp")
         .then((x) => x.json())
         .then((data) => {
-          Document.getElementById(
+          document.getElementById(
             "temp"
           ).innerHTML = `Temperatura: ${data.temperature}°C`;
-          Document.getElementById(
+          document.getElementById(
             "hum"
           ).innerHTML = `Humedad: ${data.humidity}%`;
         });
