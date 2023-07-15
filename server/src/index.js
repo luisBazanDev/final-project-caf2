@@ -10,6 +10,7 @@ import { start as startDB } from "./DatabaseManager.js";
 
   const app = express();
   app.use(express.json());
+  app.use(express.static("server/public"));
   const PORT = process.env.BACKEND_PORT;
   app.use("/api", ApiRouter);
 

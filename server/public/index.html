@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Proyecto de prueba</title>
+    <style>
+      * {
+        padding: 0;
+        margin: 0;
+        font-family: Arial, Helvetica, sans-serif;
+        font-weight: bold;
+        font-size: xx-large;
+      }
+      body {
+        background-color: #333;
+        color: #fff;
+      }
+      .container {
+        display: grid;
+        width: 100vw;
+        height: 100vh;
+        align-items: center;
+        justify-content: center;
+      }
+      .container * {
+        text-align: center;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div id="temp">Temperatura: ..</div>
+      <div id="hum">Humedad: ..</div>
+    </div>
+  </body>
+
+  <script>
+    const queryData = () => {
+      fetch("/api/temp")
+        .then((x) => x.json())
+        .then((data) => {
+          getElementById(
+            "temp"
+          ).innerHTML = `Temperatura: ${data.temperature}°C`;
+          getElementById("hum").innerHTML = `Humedad: ${data.humidity}%`;
+        });
+    };
+
+    queryData();
+    setInterval(() => {
+      queryData();
+    }, 10000);
+  </script>
+</html>
