@@ -2,9 +2,21 @@ import { Router } from "express";
 import Log from "../models/Log.js";
 
 const router = Router();
+var temperatureHumidity = {
+  temperature: 20,
+  humidity: 20,
+};
 
 router.get("/all", async (req, res) => {
   res.json(await Log.findAll());
+});
+
+router.get("/temp", async (req, res) => {
+  res.json(temperatureHumidity);
+});
+
+router.post("/temp", async (req, res) => {
+  if (req.body.temperaature) temperatureHumidity = req.body;
 });
 
 router.post("/create", async (req, res) => {
